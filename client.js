@@ -88,7 +88,6 @@ module.exports = function(RED) {
             if(msg.payload.status == 'connected'){
                 node.status({fill:'green',shape:'dot',text:'listening'});
                 sockets[node.socketId].emit(node.eventName, msg.message, function(err,data){
-                    console.log(data);
                     node.send( {payload:err || data} );
                 });
             }else{
