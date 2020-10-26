@@ -1,0 +1,154 @@
+<!-- Config -->
+<script type="text/javascript">
+    "use strict";
+    /*global RED*/
+    RED.nodes.registerType('socket-megacam-config', {
+        category: 'config',
+        defaults: {
+            host: {
+                value: "http://localhost/",
+                required: true
+            }
+        },
+        label: function() {
+            return this.host;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="socket-megacam-config">
+    <div class="form-row">
+      <label for="node-config-input-host"><i class="fa fa-globe"></i> Host</label>
+      <input type="text" id="node-config-input-host">
+    </div>
+  </script>
+
+<!-- Connector -->
+<script type="text/javascript">
+    /*global RED*/
+    RED.nodes.registerType('socketio-megacam-connector', {
+        category: 'input',
+        inputs: 0,
+        outputs: 1,
+        color: "#ff4141",
+        icon: "socketio.png",
+        paletteLabel: "socketio megacam connector",
+        defaults: {
+            server: {
+                value: "",
+                type: "socket-megacam-config"
+            },
+            name: {
+                value: ""
+            }
+        },
+        label: function() {
+            return this.name || "Socket.IO Connector";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="socketio-megacam-connector">
+    <div class="form-row">
+      <label for="node-input-server"><i class="fa fa-globe"></i> Server</label>
+      <input type="text" id="node-input-server" placeholder="Server">
+    </div>
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+  </script>
+
+<script type="text/x-red" data-help-name="socketio-megacam-connector">
+    <p>Socket.IO Connector</p>
+    <p>Provides a client for Socket.IO server</p>
+    <p>It's works only in couple with Socket.io Listener, bacause of this its output will be util only to a Socket.io Listener</p>
+    <pre>Socket.IO Connector -> Socket.IO Listener -> Payload</pre>
+ </script>
+
+<!-- Listener -->
+<script type="text/javascript">
+    /*global RED*/
+    RED.nodes.registerType('socketio-megacam-listener', {
+        category: 'function',
+        inputs: 1,
+        outputs: 1,
+        color: "#ff4141",
+        icon: "socketio.png",
+        paletteLabel: "socketio megacam listener",
+        defaults: {
+            eventname: {
+                value: "",
+                required: true
+            },
+            name: {
+                value: ""
+            }
+        },
+        label: function() {
+            return ( this.name || this.eventname ) || "Socket.IO listener";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="socketio-megacam-listener">
+    <div class="form-row">
+      <label for="node-input-eventname"><i class="icon-tasks"></i> Event Name</label>
+      <input type="text" id="node-input-eventname" placeholder="Event Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+  </script>
+
+<script type="text/x-red" data-help-name="socketio-megacam-listener">
+      <p>Socket.IO Megacam Listener</p>
+      <p>It's works only in couple with Socket.io Connector</p>
+      <pre>Socket.IO Connector -> Socket.IO Listener -> Payload</pre>
+      <p>The <code>msg.payload</code> will be whole content emitted through 'event name' that you specified</p>
+  </script>
+
+
+<!-- Emitter -->
+<script type="text/javascript">
+    /*global RED*/
+    RED.nodes.registerType('socketio-megacam-emitter', {
+        category: 'function',
+        inputs: 1,
+        outputs: 1,
+        color: "#ff4141",
+        icon: "socketio.png",
+        paletteLabel: "socketio megacam emitter",
+        defaults: {
+            eventname: {
+                value: "",
+                required: true
+            },
+            name: {
+                value: ""
+            }
+        },
+        label: function() {
+            return ( this.name || this.eventname ) || "Socket.IO emitter";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="socketio-megacam-emitter">
+    <div class="form-row">
+      <label for="node-input-eventname"><i class="icon-tasks"></i> Event Name</label>
+      <input type="text" id="node-input-eventname" placeholder="Event Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+  </script>
+
+<script type="text/x-red" data-help-name="socketio-megacam-emitter">
+      <p>Socket.IO Megacam Listener</p>
+      <p>It's works only in couple with Socket.io Connector</p>
+      <pre>Socket.IO Connector -> Socket.IO Listener -> Payload</pre>
+      <p>The <code>msg.payload</code> will be whole content emitted through 'event name' that you specified</p>
+  </script>
