@@ -48,10 +48,7 @@ module.exports = function(RED) {
             sockets[node.socketId].removeAllListeners(node.eventName);
             if(msg.payload.status == 'connected'){
                 node.status({fill:'green',shape:'dot',text:'listening'});
-                sockets[node.socketId].on(node.eventName, function(err,data){
-                    if(err)
-                        node.send({err})
-                    else
+                sockets[node.socketId].on(node.eventName, function(data){
                         node.send( {payload: data} );
                 });
             }else{
