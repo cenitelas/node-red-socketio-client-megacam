@@ -45,8 +45,7 @@ module.exports = function(RED) {
         var node = this;
         node.on('input', function(msg){
             node.socketId = msg.payload.socketId;
-            if(sockets[node.socketId].removeAllListeners === 'function')
-                sockets[node.socketId].removeAllListeners(node.eventName);
+            sockets[node.socketId].removeAllListeners(node.eventName);
             if(msg.payload.status == 'connected'){
                 node.status({fill:'green',shape:'dot',text:'listening'});
                 sockets[node.socketId].on(node.eventName, msg.message, function(err,data){
@@ -58,8 +57,7 @@ module.exports = function(RED) {
         });
 
         node.on('close', function(done) {
-            if(sockets[node.socketId].removeAllListeners === 'function')
-                sockets[node.socketId].removeAllListeners(node.eventName);
+            sockets[node.socketId].removeAllListeners(node.eventName);
             node.status({});
             done();
         });
@@ -76,7 +74,7 @@ module.exports = function(RED) {
         node.on('input', function(msg){
             node.socketId = msg.payload.socketId;
             if(msg.payload.status == 'connected'){
-                node.status({fill:'green',shape:'dot',text:'listening'});
+                node.status({fill:'green',shape:'dot',text:'emitting'});
                 sockets[node.socketId].emit(node.eventName, msg.message, function(err,data){
                     node.send( {payload:{err} || {data}} );
                 });
