@@ -45,33 +45,22 @@ module.exports = function(RED) {
         var node = this;
         node.on('input', function(msg){
             node.socketId = msg.payload.socketId;
+            sockets[node.socketId].removeListener(node.eventName, function(){});
             if(msg.payload.status == 'connected'){
                 node.status({fill:'green',shape:'dot',text:'listening'});
-                if( !sockets[node.socketId].hasListeners(node.eventName) ){
-                    sockets[node.socketId].on(node.eventName, msg.message, function(err,data){
-                        node.send( {payload:err || data} );
-                    });
-                }
+                sockets[node.socketId].on(node.eventName, msg.message, function(err,data){
+                    node.send( {payload:err || data} );
+                });
             }else{
                 node.status({fill:'red',shape:'ring',text:'disconnected'});
-                if( sockets[node.socketId].hasListeners(node.eventName) ){
-                    sockets[node.socketId].removeListener(node.eventName, function(){});
-                }
             }
         });
 
         node.on('close', function(done) {
-
-            if( sockets[node.socketId].hasListeners(node.eventName) ){
-                sockets[node.socketId].removeListener(node.eventName, function(){
-                    node.status({});
-                    done();
-                });
-            }else{
+            sockets[node.socketId].removeListener(node.eventName, function(){
                 node.status({});
                 done();
-            }
-
+            });
         });
     }
     RED.nodes.registerType('socketio-megacam-listener', SocketIOListener);
