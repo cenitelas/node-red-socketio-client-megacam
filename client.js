@@ -45,7 +45,8 @@ module.exports = function(RED) {
         var node = this;
         node.on('input', function(msg){
             node.socketId = msg.payload.socketId;
-            sockets[node.socketId].removeAllListeners(node.eventName);
+            if(sockets[node.socketId].removeAllListeners === 'function')
+                sockets[node.socketId].removeAllListeners(node.eventName);
             if(msg.payload.status == 'connected'){
                 node.status({fill:'green',shape:'dot',text:'listening'});
                 sockets[node.socketId].on(node.eventName, msg.message, function(err,data){
@@ -57,7 +58,8 @@ module.exports = function(RED) {
         });
 
         node.on('close', function(done) {
-            sockets[node.socketId].removeAllListeners(node.eventName);
+            if(sockets[node.socketId].removeAllListeners === 'function')
+                sockets[node.socketId].removeAllListeners(node.eventName);
             node.status({});
             done();
         });
