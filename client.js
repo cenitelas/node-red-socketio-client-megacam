@@ -49,7 +49,10 @@ module.exports = function(RED) {
             if(msg.payload.status == 'connected'){
                 node.status({fill:'green',shape:'dot',text:'listening'});
                 sockets[node.socketId].on(node.eventName, msg.message, function(err,data){
-                    node.send( {payload:{err} || {data}} );
+                    if(err)
+                        node.send({err})
+                    else
+                        node.send( {payload: data} );
                 });
             }else{
                 node.status({fill:'red',shape:'ring',text:'disconnected'});
@@ -76,7 +79,10 @@ module.exports = function(RED) {
             if(msg.payload.status == 'connected'){
                 node.status({fill:'green',shape:'dot',text:'emitting'});
                 sockets[node.socketId].emit(node.eventName, msg.message, function(err,data){
-                    node.send( {payload:{err} || {data}} );
+                    if(err)
+                        node.send({err})
+                    else
+                        node.send( {payload: data} );
                 });
             }else{
                 node.status({fill:'red',shape:'ring',text:'disconnected'});
